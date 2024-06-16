@@ -620,3 +620,4 @@ MigrationBackup/
 .env
 sandbox/
 data
+rd/cache
