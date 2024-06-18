@@ -2,8 +2,9 @@
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import JSONResponse
-from ..logger import LOGGER
+
 from ..lib.schema.entrance import PolygonPayload
+from ..logger import LOGGER
 
 # ------------------------------ Initialization -------------------------------
 router = APIRouter()
@@ -48,7 +49,9 @@ async def find_entrance(lat: float, long: float):
     status_code=200,
 )
 async def identify_entrances(polygon_payload: PolygonPayload):
-    """Identify the entrancs given a polygon."""
+    """Identify the entrancs for a given polygon.
+    Note that for coordinates must be in format [{longitude}, {latitude}]
+    """
     try:
         return {}
 

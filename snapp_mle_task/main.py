@@ -7,7 +7,11 @@ import os
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.openapi.utils import get_openapi
 
+from snapp_mle_task.lib.db import init_database
 from snapp_mle_task.routers import http_entrance
+
+# Initialize postgres
+init_database()
 
 app = FastAPI()
 

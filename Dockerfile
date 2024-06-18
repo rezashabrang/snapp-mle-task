@@ -12,7 +12,7 @@ ENV LANG=C.UTF-8 \
   PYTHONUNBUFFERED=1 \
   TZ=Asia/Tehran
 
-RUN apt update && apt upgrade -y && apt install curl gcc -y && rm -rf /var/lib/apt/lists/* && curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
+RUN apt update && apt upgrade -y && apt install curl gcc postgresql postgresql-contrib pkg-config libpq-dev -y && rm -rf /var/lib/apt/lists/* && curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
   cd /usr/local/bin && \
   ln -s /opt/poetry/bin/poetry && \
   poetry config virtualenvs.create false
@@ -22,4 +22,4 @@ RUN poetry install -n --only main
 
 COPY . /app
 
-CMD sleep infinity
+CMD uvicorn snapp_mle_task.main:app --host 0.0.0.0 --port 80 --log-level ${LOG_LEVEL} --reload

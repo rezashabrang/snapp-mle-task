@@ -1,6 +1,7 @@
 """Schema definition for `http_entrance` endpoints"""
 
 from typing import List
+
 from pydantic import BaseModel
 
 
