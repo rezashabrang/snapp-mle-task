@@ -1,61 +1,61 @@
 services:
-    ###############
-    # API #
-    ###############
-    entrance-locator-api:
-        build:
-            dockerfile: Dockerfile
-            context: .
-            args:
-                - http_proxy=http://10.0.11.10:8080
-                - https_proxy=http://10.0.11.10:8080
-        image: entrance-locator-api
-        container_name: entrance-locator-api
-        restart: always
-        env_file:
-            - .env
-        volumes:
-            - .:/app/
-        ports:
-            - "8080:80"
-        profiles:
-            - api
-            - all
+  ###############
+  # API #
+  ###############
+  entrance-locator-api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - http_proxy=http://10.0.11.10:8080
+        - https_proxy=http://10.0.11.10:8080
+    image: entrance-locator-api
+    container_name: entrance-locator-api
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - .:/app/
+    ports:
+      - "8080:80"
+    profiles:
+      - api
+      - all
 
-    ###############
-    # Dependencies #
-    ###############
-    # Postgres alongside PostGIS
-    postgis:
-        image: postgis/postgis:16-3.4
-        container_name: postgres-db
-        restart: always
-        environment:
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_DB: ${POSTGRES_DB}
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
-        ports:
-            - "5432:5432"
-        profiles:
-            - database
-            - all
+  ###############
+  # Dependencies #
+  ###############
+  # Postgres alongside PostGIS
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    profiles:
+      - database
+      - all
 
-    pgadmin:
-        image: dpage/pgadmin4:7.6
-        container_name: pgadmin
-        restart: always
-        environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL} # Replace with your email
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} # Replace with your password
-        volumes:
-            - pgadmin-data:/var/lib/pgadmin
-        ports:
-            - "5050:80"
-        profiles:
-            - database
-            - all
+  pgadmin:
+    image: dpage/pgadmin4:7.6
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL} # Replace with your email
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} # Replace with your password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    profiles:
+      - database
+      - all
 volumes:
-    postgres-data:
-    pgadmin-data:
+  postgres-data:
+  pgadmin-data:
