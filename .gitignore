@@ -621,3 +621,4 @@ MigrationBackup/
 sandbox/
 data
 rd/cache
+!snapp_mle_task/lib
