@@ -37,10 +37,6 @@ async def entrance_finder(lat: float, long: float):
             print(res)
             return res
 
-    except HTTPException as err:
-        if err.detail == "something":
-            raise HTTPException(status_code=400, detail="something") from err
-
     except Exception as err:
         LOGGER.error(
             "Unknown error happened in `find_entrance` endpoint.", exc_info=err

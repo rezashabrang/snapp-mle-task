@@ -40,12 +40,12 @@ formatting: codestyle
 #* Linting
 .PHONY: test
 test:
-	PYTHONPATH=$(PYTHONPATH) poetry run pytest -c pyproject.toml --cov-report=html --cov=snapp_mle_task --no-cov tests/
+	PYTHONPATH=$(PYTHONPATH) poetry run pytest -c pyproject.toml --cov-report=html --cov=snapp_mle_task tests/
 
 .PHONY: coverage
 coverage:
-	PYTHONPATH=$(PYTHONPATH) poetry run coverage report --rcfile pyproject.toml 
-	
+	PYTHONPATH=$(PYTHONPATH) poetry run coverage report --rcfile pyproject.toml
+
 .PHONY: check-codestyle
 check-codestyle:
 	poetry run isort --diff --check-only --settings-path pyproject.toml ./
@@ -68,7 +68,7 @@ check-safety:
 	poetry run safety check --full-report --file req-main.txt
 	poetry run bandit -ll --recursive snapp_mle_task tests
 	rm -f req-main.txt
-	
+
 .PHONY: lint
 lint: check-codestyle mypy
 
