@@ -48,5 +48,6 @@ def init_database():
 
     cursor.execute(sql_script)
     conn.commit()
+    cursor.close()
 
     LOGGER.info("Database successfully initialized.")
