@@ -19,8 +19,11 @@ Snapp Machine Learning Engineer Task.
 
 This repo focuses on analyzing the Snapp ride dataset from Tehran, from geospatial information for each journey's origin and destination.
 
--   The `rd` folder contains a notebook for R&D part. `entrances.html` visualizes the entrance points for each location.
--   In [Task Journey](#task-journey-️) part you can view the step-by-step process of the task.
+- The `rd` folder contains a notebook for R&D part with detailed report and explanation. `entrances.html` visualizes the final entrance points for each location.
+- `snapp_mle_task` and `tests` are the folders where the API code resides.
+- In [Task Journey](#task-journey-️) part you can view the step-by-step process of the task.
+- In [API](#api-) part you can view the detail about the part of creating an API for utilizing the research used in this task.
+- [Future Enhancement](#future-enhancements-) is a list of things that are out of scope for this task considering the time but can be further explored.
 
 ## Task Journey 🗺️
 
@@ -70,22 +73,87 @@ After inspecting the entrances we went through a cycle of tuning the buffer dist
 
 After finding the best parameters for each step of our approach, the final visualiztion containing only the entrances was created (`rd/entrances.html`).
 
+## API 📡
+
+### Overview
+
+![Api Showcase](images/api-showcase.gif)
+A short gif showcasing the API
+
+After finding entrances I came to an idea for using this research and utlizing the data and things learned to create something like the Snapp app that pinpoints the exact entrance when the pin is placed inside the polygon of a place.
+
+So I used `FastAPI` as the API framework, `Postgres` alongside `PostGIS` as the database for creating this API.
+
+### Usage
+
+For getting up & running for the API:
+
+1. Clone the repository
+
+```bash
+git clone git@github.com:rezashabrang/snapp-mle-task.git
+```
+
+2. Pull related images
+
+```bash
+docker compose -f docker-compose-dev.yml --profile all pull
+```
+
+3. Build the API image
+
+```bash
+docker compose -f docker-compose-dev.yml --profile api build
+```
+
+4. Run the containers
+
+```bash
+docker compose -f docker-compose-dev.yml --profile all up -d
+```
+
+5. Populate the data for Postgres
+
+- Create a folder `data` at the root of the project
+- Run all cells of `rd/main.ipynb` notebook. You now should see `places_meta.csv` file in the `data` folder.
+- Populate places data (Polygon alongside entrances) using the script (You need to have installed dependenies in `requirements.txt`)
+
+```bash
+make install  # For installing dependencies
+# OR
+pip install -r requirements.text
+```
+
+```bash
+python ./snapp_mle_task/scripts/data_populator.py  --host localhost --port 5432 --database entrance --user EntUser --password test --csv_file ./data/places_meta.csv --data_type place
+```
+
+6. Now go to `localhost:8080/docs` for Swagger UI
+
 ## Future Enhancements 🚀
 
 Although this repo is in a scope of a task but here some tips, improvements and enhancements are listed that are out-of-scope for this task but could be elaborated more on later.
 
--   <b>Defining a metric for the clustering evaluation</b>
+- <b>Defining a metric for the clustering evaluation</b>
 
-    The entrances were assesed visually but looking at the big picture maybe some metrics like `Silhouette Score` or `Davies-Bouldin Index` could be used for automatic evaluation.
+  The entrances were assesed visually but looking at the big picture maybe some metrics like `Silhouette Score` or `Davies-Bouldin Index` could be used for automatic evaluation.
 
--   <b>DBSCAN Algorithm</b>
+- <b>DBSCAN Algorithm</b>
 
-    As mentioned one of the reasons. `HDBSCAN` was used because of its flexibility. But by inspecting the geospatial data more and even consulting with domain expertise the `DBSCAN` can be the better choice of algorithm by tuning the parametrs accurately. That of course need to be researched (For example by defining groundtruth entrance locations and then comparing the distance of centroids each algorithm calculates with the entrances).
+  As mentioned one of the reasons. `HDBSCAN` was used because of its flexibility. But by inspecting the geospatial data more and even consulting with domain expertise the `DBSCAN` can be the better choice of algorithm by tuning the parametrs accurately. That of course need to be researched (For example by defining groundtruth entrance locations and then comparing the distance of centroids each algorithm calculates with the entrances).
 
--   <b>Finding Crowded Places</b>
+- <b>Finding Crowded Places</b>
 
-    In hint part the places were given beforehand but in real life scenario we may not know all the crowded places like malls and hospitals. Also new structures may be opened in time. So we can develop a system to find these existing places using clustering and alongside some other helpers. Also we could develop an anomaly detection system for finding new emerging places.
+  In hint part the places were given beforehand but in real life scenario we may not know all the crowded places like malls and hospitals. Also new structures may be opened in time. So we can develop a system to find these existing places using clustering and alongside some other helpers. Also we could develop an anomaly detection system for finding new emerging places.
 
--   <b>Better Heuristic for `min_cluster_size`</b>
+- <b>Better Heuristic for `min_cluster_size`</b>
 
-    This parameter was choosen by trial and error. We could have used some heuristics to find the optimal value. This is pure speculation but for example we could use `K-means` and some automatic clustering method for it to find some clusters and calulate the density for each of them to get a rough estimate for this parameter and then perform `HDBSCAN`. This would leads to more accurate clusters.
+  This parameter was choosen by trial and error. We could have used some heuristics to find the optimal value. This is pure speculation but for example we could use `K-means` and some automatic clustering method for it to find some clusters and calulate the density for each of them to get a rough estimate for this parameter and then perform `HDBSCAN`. This would leads to more accurate clusters.
+
+- <b>Implementing clustering logic in API</b>
+
+  I wanted to implement the clustering into the API. The purpose is given any polygon of a place and the rides dataset we have we could identify the entrances of any new place on demand.
+
+- <b>Curated Testing</b>
+
+  Tests I have written are general. We could write more curated tests and use fixtures and mocking data concepts for more and robust tests.
