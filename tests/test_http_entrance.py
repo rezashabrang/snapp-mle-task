@@ -1,8 +1,9 @@
 """Router tests"""
 
-from snapp_mle_task.routers.http_entrance import router
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
+
+from snapp_mle_task.routers.http_entrance import router
 
 client = TestClient(router)
 
